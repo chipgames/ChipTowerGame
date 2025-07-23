@@ -7,7 +7,9 @@
     <title data-i18n="gameTitle">타워 디펜스 게임 - 전략과 전술의 세계</title>
     <meta name="description" content="전략적인 타워 배치와 업그레이드를 통해 적을 막는 타워 디펜스 게임. 다양한 타워, 맵, 전략을 경험하세요.">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="data:,">
+    <link rel="icon" type="image/png" href="images/ChipGames_favicon.png">
+    <link rel="shortcut icon" type="image/png" href="images/ChipGames_favicon.png">
+    <link rel="apple-touch-icon" href="images/ChipGames_favicon.png">
     <!-- 다국어 지원 스크립트 로드 -->
     <script src="lang/i18n.js"></script>
     <style>
@@ -37,20 +39,6 @@
 
         .game-area {
             position: relative;
-        }
-
-        #countdown {
-            display: none;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 3em;
-            color: #FFD600;
-            font-weight: bold;
-            text-shadow: 0 2px 8px #000, 0 0 8px #000, 0 0 2px #000;
-            z-index: 1000;
-            pointer-events: none;
         }
 
         /* 언어 선택 드롭다운 스타일 */
@@ -84,6 +72,7 @@
     <header class="main-header">
         <nav class="main-nav">
             <div class="logo">
+                <img src="images/ChipGames_Logo.png" alt="ChipGames Logo" class="logo-image">
                 <h1 data-i18n="gameTitle">타워 디펜스</h1>
             </div>
             <button class="nav-toggle" aria-label="메뉴 열기">☰</button>
@@ -161,8 +150,10 @@
                 </div>
             </div>
 
-            <!-- 게임 캔버스 -->
-            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            <!-- 게임 캔버스 컨테이너 -->
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+            </div>
 
             <!-- 웨이브 진행률 바 -->
             <div id="waveProgress" class="wave-progress" style="display:none;">
@@ -173,9 +164,6 @@
             <div id="towerMenu" class="tower-menu-container" style="display: none;">
                 
             </div>
-
-            <!-- 카운트다운 표시 영역 -->
-            <div id="countdown"></div>
 
             <!-- 게임 컨트롤 -->
             <div class="game-controls">

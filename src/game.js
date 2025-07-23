@@ -148,7 +148,7 @@ function startWave() {
         //}
         gameState.enemiesRemaining = 1 + normalCount;
         gameState.totalEnemies = 1 + normalCount;
-        showWaveStartEffect();
+        showWaveStartMessage(gameState.wave);
         playSound('wave_start');
         return; // 반드시 함수 종료
     }
@@ -169,7 +169,7 @@ function startWave() {
     enemyGroups = [];
     
     spawnNextEnemy();
-    showWaveStartEffect();
+    showWaveStartMessage(gameState.wave);
     playSound('wave_start');
 }
 
@@ -304,6 +304,108 @@ function gameLoop() {
         return !shouldRemove;
     });
 
+    // === 데미지 이펙트 그리기 ===
+    drawDamageEffects();
+    // === 데미지 이펙트 그리기 끝 ===
+
+    // === 적 스킬 이펙트 그리기 ===
+    drawSkillEffects();
+    // === 적 스킬 이펙트 그리기 끝 ===
+
+    // === 특수 이펙트 그리기 ===
+    drawSpecialEffects();
+    // === 특수 이펙트 그리기 끝 ===
+
+    // === 타워 설치 미리보기 그리기 (canvas 직접) ===
+    if (towerPreview) {
+        const { x, y, range, type } = towerPreview;
+        const centerX = x * TILE_SIZE + TILE_SIZE / 2;
+        const centerY = y * TILE_SIZE + TILE_SIZE / 2;
+        // 사거리 원
+        ctx.save();
+        ctx.globalAlpha = 0.18;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, range * TILE_SIZE, 0, Math.PI * 2);
+        ctx.fillStyle = TOWER_TYPES[type]?.color || 'rgba(0,0,0,0.18)';
+        ctx.fill();
+        ctx.restore();
+        // 사거리 테두리
+        ctx.save();
+        ctx.globalAlpha = 0.7;
+        ctx.strokeStyle = TOWER_TYPES[type]?.color || '#888';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, range * TILE_SIZE, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+        // 타워 본체(반투명)
+        ctx.save();
+        ctx.globalAlpha = 0.5;
+        const radius = TILE_SIZE / 2 - 4;
+        switch (type) {
+            case 'BASIC':
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                ctx.fillStyle = TOWER_TYPES[type]?.color || '#888';
+                ctx.fill();
+                break;
+            case 'ICE':
+                ctx.beginPath();
+                for (let i = 0; i < 6; i++) {
+                    const angle = (i * Math.PI * 2) / 6;
+                    const px = centerX + radius * Math.cos(angle);
+                    const py = centerY + radius * Math.sin(angle);
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.closePath();
+                ctx.fillStyle = TOWER_TYPES[type]?.color || '#888';
+                ctx.fill();
+                break;
+            case 'POISON':
+                ctx.beginPath();
+                for (let i = 0; i < 5; i++) {
+                    const angle = (i * Math.PI * 2) / 5 - Math.PI / 2;
+                    const px = centerX + radius * Math.cos(angle);
+                    const py = centerY + radius * Math.sin(angle);
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.closePath();
+                ctx.fillStyle = TOWER_TYPES[type]?.color || '#888';
+                ctx.fill();
+                break;
+            case 'LASER':
+                ctx.beginPath();
+                for (let i = 0; i < 3; i++) {
+                    const angle = (i * Math.PI * 2) / 3;
+                    const px = centerX + radius * Math.cos(angle);
+                    const py = centerY + radius * Math.sin(angle);
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.closePath();
+                ctx.fillStyle = TOWER_TYPES[type]?.color || '#888';
+                ctx.fill();
+                break;
+            case 'SPLASH':
+                ctx.beginPath();
+                ctx.rect(centerX - radius, centerY - radius, radius * 2, radius * 2);
+                ctx.fillStyle = TOWER_TYPES[type]?.color || '#888';
+                ctx.fill();
+                break;
+            case 'SUPPORT':
+                ctx.beginPath();
+                ctx.rect(centerX - radius / 2, centerY - radius, radius, radius * 2);
+                ctx.rect(centerX - radius, centerY - radius / 2, radius * 2, radius);
+                ctx.fillStyle = TOWER_TYPES[type]?.color || '#888';
+                ctx.fill();
+                break;
+        }
+        ctx.restore();
+    }
+    // === 타워 설치 미리보기 그리기 끝 ===
+
     // 웨이브 종료 체크
     checkWaveEnd();
 
@@ -361,6 +463,10 @@ function gameLoop() {
     // 웨이브 메시지 그리기
     drawWaveMessage();
     
+    // === 다음 웨이브 카운트다운 그리기 ===
+    drawCountdown();
+    // === 다음 웨이브 카운트다운 그리기 끝 ===
+    
     // 다음 프레임 요청
     requestAnimationFrame(gameLoop);
 }
@@ -369,7 +475,7 @@ function gameLoop() {
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
         e.preventDefault();
-        if (!gameState.waveInProgress && !gameState.isGameOver && !isCountdownActive && gameState.isStarted) {
+        if (!gameState.waveInProgress && !gameState.isGameOver && !countdownActive && gameState.isStarted) {
             showCountdown();
         }
     } else if (e.code === 'KeyP') {
@@ -491,6 +597,19 @@ window.addEventListener('load', () => {
     const loadingScreen = document.getElementById('loadingScreen');
     if (loadingScreen) {
         loadingScreen.style.display = 'none';
+    }
+    
+    // 모바일에서 스크롤 힌트 자동 숨김
+    const canvasContainer = document.querySelector('.canvas-container');
+    if (canvasContainer && window.innerWidth <= 768) {
+        setTimeout(() => {
+            canvasContainer.classList.add('hide-hint');
+        }, 10000); // 10초 후 힌트 숨김
+        
+        // 스크롤 이벤트로 힌트 숨김
+        canvasContainer.addEventListener('scroll', () => {
+            canvasContainer.classList.add('hide-hint');
+        }, { passive: true });
     }
 });
 
@@ -1539,6 +1658,7 @@ document.head.insertAdjacentHTML('beforeend', `
         }
         @media (max-width: 768px) {
             .info-bar {
+                margin-top: 50px;
                 gap: 4px;
                 padding: 4px;
             }
@@ -2020,41 +2140,11 @@ function showAmbushEffect(x, y) {
  * 적의 스킬 사용 시 시각 효과를 표시
  */
 function showSkillEffect(x, y, name) {
-    const parent = document.querySelector('.game-area');
-    if (!parent) return;
-    // 이미 같은 위치+이름에 이펙트가 있으면 새로 만들지 않음
-    let effect = parent.querySelector(`.enemy-skill-effect[data-x='${x}'][data-y='${y}'][data-name='${name}']`);
-    if (!effect) {
-        effect = EffectPool.get('special');
-        effect.className = 'enemy-skill-effect';
-        effect.setAttribute('data-x', x);
-        effect.setAttribute('data-y', y);
-        effect.setAttribute('data-name', name);
-        // DOM에 없을 때만 append
-        if (!effect.parentNode) {
-            parent.appendChild(effect);
-        }
-    }
-    effect.textContent = name;
-    effect.style.display = 'block';
-    effect.style.position = 'absolute';
-    effect.style.left = `${x * TILE_SIZE + TILE_SIZE / 2}px`;
-    // HP바 바로 위에 표시
-    //effect.style.top = `${y * TILE_SIZE + 8}px`;
-    effect.style.top = `${y * TILE_SIZE + (TILE_SIZE * 2) }px`;
-    effect.style.transform = 'translate(-50%, -100%)';
-    effect.style.color = '#00eaff';
-    effect.style.fontWeight = 'bold';
-    effect.style.fontSize = '14px';
-    effect.style.pointerEvents = 'none';
-    effect.style.zIndex = 1200;
-    effect.style.animation = 'skillEffectFade 1.2s ease-out forwards';
-    effect.addEventListener('animationend', () => {
-        EffectPool.release(effect);
-    }, { once: true });
-    setTimeout(() => {
-        EffectPool.release(effect);
-    }, 1200);
+    skillEffects.push({
+        x, y, name,
+        startTime: performance.now(),
+        duration: 1200 // ms
+    });
 }
 
 /**
@@ -2207,85 +2297,14 @@ function showAttackEffect(x, y, targetX, targetY, isCritical = false) {
  */
 function showDamageNumber(x, y, damage, isCritical = false) {
     if (lowSpecMode) return;
-
-    const damageText = EffectPool.get('damage');
-    const parent = document.querySelector('.game-area');
-    if (parent && damageText.parentNode !== parent) {
-        if (damageText.parentNode) damageText.parentNode.removeChild(damageText);
-        parent.appendChild(damageText);
-    }
-
-    // 데미지 크기에 따른 스타일 변화
-    const damageSize = Math.min(Math.max(damage / 100, 1.2), 2);
-    const fontSize = Math.floor(16 * damageSize);
-    const color = isCritical ? '#ff4444' : '#ffffff';
-    const textShadow = isCritical 
-        ? '0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000' 
-        : '0 0 5px #000000, 0 0 10px #000000';
-
-    // 초기 위치 설정
-    const startX = x * TILE_SIZE + TILE_SIZE/2;
-    const startY = y * TILE_SIZE + TILE_SIZE*2;
-    const offsetX = (Math.random() - 0.5) * 16;
-
-    // 애니메이션 상태
-    let startTime = null;
-    const duration = 1100; // 1.5초
-    const initialVelocity = -3.5; // 초기 상승 속도
-    const gravity = 0.2; // 중력
-    let currentY = startY;
-    let currentVelocity = initialVelocity;
-    const maxFallDistance = TILE_SIZE * 1.5; // 최대 낙하 거리 (타일 2개 높이)
-
-    // 애니메이션 함수
-    function animate(currentTime) {
-        if (!startTime) startTime = currentTime;
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-
-        // 물리 기반 움직임 계산
-        currentVelocity += gravity;
-        currentY += currentVelocity;
-
-        // 최대 낙하 높이 제한
-        const maxY = startY + maxFallDistance;
-        if (currentY > maxY) {
-            currentY = maxY;
-            currentVelocity = 0;
-        }
-
-        // scale 변화 (0.3 ~ 1.3)
-        const scale = 0.5 + Math.sin(progress * Math.PI * 2) * 1;
-        const opacity = 1 - progress;
-
-        // 위치와 스타일 업데이트
-        damageText.style.cssText = `
-            display: block;
-            position: absolute;
-            left: ${startX + offsetX}px;
-            top: ${currentY}px;
-            transform: translate(-50%, -50%) scale(${scale});
-            font-size: ${fontSize}px;
-            color: ${color};
-            text-shadow: ${textShadow};
-            font-weight: ${isCritical ? '900' : 'bold'};
-            opacity: ${opacity};
-            z-index: 1000;
-            pointer-events: none;
-        `;
-
-        damageText.textContent = Math.round(damage).toLocaleString();
-
-        // 애니메이션 계속
-        if (progress < 1) {
-            requestAnimationFrame(animate);
-        } else {
-            EffectPool.release(damageText);
-        }
-    }
-
-    // 애니메이션 시작
-    requestAnimationFrame(animate);
+    damageEffects.push({
+        x, y, value: damage, isCritical,
+        startTime: performance.now(),
+        offsetX: (Math.random() - 0.5) * 16,
+        velocity: -5.5,
+        currentY: y * TILE_SIZE + TILE_SIZE / 2,
+        finished: false
+    });
 }
 
 // 데미지 숫자 점프 애니메이션 스타일 추가
@@ -2343,25 +2362,12 @@ document.head.insertAdjacentHTML('beforeend', `
  */
 function showSpecialEffect(x, y, name) {
     if (lowSpecMode) return;
-    const effect = EffectPool.get('special');
-    const parent = document.querySelector('.game-area');
-    if (parent && !effect.parentNode) {
-        parent.appendChild(effect);
-    }
-    const centerX = x * TILE_SIZE + TILE_SIZE/2;
-    const centerY = y * TILE_SIZE + TILE_SIZE * 3.2; // 본체 중심에 오도록 조정
-    effect.style.cssText = `
-        display: block;
-        left: ${centerX}px;
-        top: ${centerY}px;
-    `;
-    effect.innerHTML = `
-        <div class="special-text">${t(name)}</div>
-    `;
+    specialEffects.push({
+        x, y, name,
+        startTime: performance.now(),
+        duration: 1200 // ms
+    });
     playSound('special');
-    effect.addEventListener('animationend', () => {
-        EffectPool.release(effect);
-    }, { once: true });
 }
 
 window.addEventListener('DOMContentLoaded', function() {
@@ -2552,7 +2558,7 @@ function drawWaveMessage() {
         const bossTypes = Object.keys(BOSS_TYPES);
         const randomBossType = bossTypes[Math.floor(Math.random() * bossTypes.length)];
         ctx.fillText(
-            `${BOSS_TYPES[randomBossType].name} ${t('bossAppear')}!`,
+            `${t(BOSS_TYPES[randomBossType].name)} ${t('bossAppear')}!`,
             canvas.width / 2,
             canvas.height / 2
         );
@@ -2650,4 +2656,127 @@ window.restartGame = function() {
     if (btn) btn.remove();
     origRestartGame();
 };
+
+function drawDamageEffects() {
+    const now = performance.now();
+    for (let i = damageEffects.length - 1; i >= 0; i--) {
+        const eff = damageEffects[i];
+        const elapsed = now - eff.startTime;
+        const duration = 1100;
+        if (elapsed > duration) {
+            damageEffects.splice(i, 1);
+            continue;
+        }
+        // 애니메이션 계산
+        eff.velocity += 0.2; // gravity
+        eff.currentY += eff.velocity;
+        const progress = elapsed / duration;
+        const scale = 0.5 + Math.sin(progress * Math.PI * 2) * 1;
+        const opacity = 1 - progress;
+        ctx.save();
+        ctx.globalAlpha = opacity;
+        ctx.font = `bold ${eff.isCritical ? 28 : 20}px Arial`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = eff.isCritical ? '#ff4444' : '#fff';
+        ctx.strokeStyle = eff.isCritical ? '#ff0000' : '#000';
+        ctx.lineWidth = eff.isCritical ? 4 : 2;
+        ctx.shadowColor = eff.isCritical ? '#ff0000' : '#000';
+        ctx.shadowBlur = eff.isCritical ? 12 : 6;
+        ctx.save();
+        ctx.translate(eff.x * TILE_SIZE + TILE_SIZE / 2 + eff.offsetX, eff.currentY);
+        ctx.scale(scale, scale);
+        ctx.strokeText(Math.round(eff.value), 0, 0);
+        ctx.fillText(Math.round(eff.value), 0, 0);
+        ctx.restore();
+        ctx.restore();
+    }
+}
+
+function drawSkillEffects() {
+    const now = performance.now();
+    for (let i = skillEffects.length - 1; i >= 0; i--) {
+        const eff = skillEffects[i];
+        const elapsed = now - eff.startTime;
+        if (elapsed > eff.duration) {
+            skillEffects.splice(i, 1);
+            continue;
+        }
+        // 애니메이션 계산 (위로 떠오르며 사라짐)
+        const progress = elapsed / eff.duration;
+        const opacity = 1 - progress;
+        const floatY = -40 * progress; // 위로 20px 이동
+        ctx.save();
+        ctx.globalAlpha = opacity;
+        ctx.font = 'bold 16px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillStyle = '#00eaff';
+        ctx.shadowColor = '#00eaff';
+        ctx.shadowBlur = 8;
+        // 적의 중앙 위, HP바 위 등
+        const drawX = eff.x * TILE_SIZE + TILE_SIZE / 2;
+        const drawY = eff.y * TILE_SIZE + 6 + floatY;
+        ctx.fillText(eff.name, drawX, drawY);
+        ctx.restore();
+    }
+}
+
+function drawSpecialEffects() {
+    const now = performance.now();
+    for (let i = specialEffects.length - 1; i >= 0; i--) {
+        const eff = specialEffects[i];
+        const elapsed = now - eff.startTime;
+        if (elapsed > eff.duration) {
+            specialEffects.splice(i, 1);
+            continue;
+        }
+        // 애니메이션 계산 (확대, 투명도 변화)
+        const progress = elapsed / eff.duration;
+        const opacity = 0.1 - progress;
+        const scale = 0.2 + 0.3 * progress; // 1 → 1.5로 커짐
+        ctx.save();
+        ctx.globalAlpha = opacity;
+        ctx.font = 'bold 32px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = 'gold';
+        ctx.shadowColor = '#fff';
+        ctx.shadowBlur = 16;
+        // 타워/적 중앙에 표시
+        const drawX = eff.x * TILE_SIZE + TILE_SIZE / 2;
+        const drawY = eff.y * TILE_SIZE + TILE_SIZE / 2;
+        ctx.translate(drawX, drawY);
+        ctx.scale(scale, scale);
+        ctx.fillText(eff.name, 0, 0);
+        ctx.restore();
+    }
+}
+
+function showCountdown() {
+    countdownActive = true;
+    countdownStartTime = performance.now();
+}
+
+function drawCountdown() {
+    if (!countdownActive) return;
+    const now = performance.now();
+    const elapsed = now - countdownStartTime;
+    const totalSeconds = Math.ceil((countdownDuration - elapsed) / 1000);
+    if (totalSeconds > 0) {
+        ctx.save();
+        ctx.font = 'bold 80px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#FFD600';
+        ctx.shadowColor = '#000';
+        ctx.shadowBlur = 16;
+        ctx.globalAlpha = 0.9;
+        ctx.fillText(totalSeconds, canvas.width / 2, canvas.height / 2);
+        ctx.restore();
+    } else {
+        countdownActive = false;
+        startWave();
+    }
+}
 

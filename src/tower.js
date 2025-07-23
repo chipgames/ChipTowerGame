@@ -757,43 +757,6 @@ class Tower {
         return Math.floor((baseValue + upgradeCost) * 0.7);
     }
 
-    // 타워 범위 미리보기 표시
-    // 타워 설치 전 범위를 미리 보여줌
-    showTowerRangePreview(x, y, range, type) {
-        if (rangePreview) {
-            rangePreview.remove();
-        }
-
-        rangePreview = document.createElement('div');
-        rangePreview.className = 'tower-range-preview';
-
-        // 타워 중심을 기준으로 계산
-        const centerX = x * TILE_SIZE + TILE_SIZE / 2;
-        const centerY = y * TILE_SIZE + TILE_SIZE / 2;
-        const diameter = range * TILE_SIZE * 2;
-
-        rangePreview.style.left = `${centerX - diameter / 2}px`;
-        rangePreview.style.top = `${centerY - diameter / 2}px`;
-        rangePreview.style.width = `${diameter}px`;
-        rangePreview.style.height = `${diameter}px`;
-
-        // 타워 종류에 따른 색상 설정
-        const tower = TOWER_TYPES[type];
-        rangePreview.style.backgroundColor = `${tower.color}20`;
-        rangePreview.style.borderColor = tower.color;
-
-        document.querySelector('.game-area').appendChild(rangePreview);
-    }
-
-    // 타워 범위 미리보기 숨기기
-    // 타워 범위 미리보기를 제거
-    hideTowerRangePreview() {
-        if (rangePreview) {
-            rangePreview.remove();
-            rangePreview = null;
-        }
-    }
-
     // 업그레이드 가능 여부 확인
     // 특정 업그레이드가 가능한지 확인
     canUpgrade(upgradeType) {
@@ -833,36 +796,11 @@ function towerFromData(data) {
 
 // 타워 관련 유틸리티 함수들
 function showTowerRangePreview(x, y, range, type) {
-    if (rangePreview) {
-        rangePreview.remove();
-    }
-    
-    rangePreview = document.createElement('div');
-    rangePreview.className = 'tower-range-preview';
-    
-    // 타워 중심을 기준으로 계산
-    const centerX = x * TILE_SIZE + TILE_SIZE/2;
-    const centerY = (y * TILE_SIZE + TILE_SIZE * 2) + TILE_SIZE;
-    const diameter = range * TILE_SIZE * 2;
-    
-    rangePreview.style.left = `${centerX - diameter/2}px`;
-    rangePreview.style.top = `${centerY - diameter/2}px`;
-    rangePreview.style.width = `${diameter}px`;
-    rangePreview.style.height = `${diameter}px`;
-    
-    // 타워 종류에 따른 색상 설정
-    const tower = TOWER_TYPES[type];
-    rangePreview.style.backgroundColor = `${tower.color}20`;
-    rangePreview.style.borderColor = tower.color;
-    
-    document.querySelector('.game-area').appendChild(rangePreview);
+    towerPreview = { x, y, range, type };
 }
 
 function hideTowerRangePreview() {
-    if (rangePreview) {
-        rangePreview.remove();
-        rangePreview = null;
-    }
+    towerPreview = null;
 }
 
 function checkTowerCombos() {
@@ -1198,7 +1136,7 @@ function showTowerUpgradeMenu(tower, clientX, clientY) {
     const headerRow = document.createElement('div');
     headerRow.className = 'tower-upgrade-header-row';
     headerRow.innerHTML = `
-        <span class="tower-upgrade-header-title">${TOWER_TYPES[tower.type].name} Lv.${tower.level}</span>
+        <span class="tower-upgrade-header-title">${t(TOWER_TYPES[tower.type].name)} Lv.${tower.level}</span>
         <span class="tower-upgrade-header-stats">
             <span>⚔️ ${Math.floor(tower.damage)}</span>
             <span>🎯 ${tower.range}</span>
