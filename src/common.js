@@ -68,11 +68,18 @@ let towers = [];         // 설치된 타워 배열
 let enemies = [];        // 생성된 적 배열
 let enemyGroups = [];    // 적 그룹 배열
 let groupIdCounter = 1;  // 그룹 ID 카운터
-let rangePreview = null; // 타워 범위 미리보기
+let rangePreview = null; // 타워 범위 미리보기 (기존 DOM 방식, 미사용)
+let towerPreview = null; // 타워 미리보기 정보 { x, y, range, type }
 let shownCombos = [];    // 표시된 타워 조합
 let currentWaveMessage = null; // 현재 웨이브 메시지
 let waveMessageStartTime = 0;  // 웨이브 메시지 시작 시간
 let lowSpecMode = false; // 저사양 모드 상태
+let damageEffects = []; // 데미지 이펙트 정보 배열 (canvas 직접 그리기용)
+let skillEffects = []; // 적 스킬 이펙트 정보 배열 (canvas 직접 그리기용)
+let specialEffects = []; // 특수 이펙트 정보 배열 (canvas 직접 그리기용)
+let countdownActive = false;      // 카운트다운 진행 중 여부
+let countdownStartTime = 0;       // 카운트다운 시작 시각
+let countdownDuration = 3000;     // 카운트다운 전체 시간(ms)
 
 // UI 요소
 // 게임의 UI 요소 참조
