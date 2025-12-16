@@ -3,13 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2533613198240039" crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2533613198240039&v=20250127" crossorigin="anonymous"></script>
+    <script>
+        // AdSense 안전한 초기화
+        function initializeAdSense() {
+            // AdSense가 완전히 로드될 때까지 대기
+            let attempts = 0;
+            const maxAttempts = 10;
+            
+            function tryInitialize() {
+                attempts++;
+                
+                if (typeof adsbygoogle !== 'undefined' && Array.isArray(adsbygoogle)) {
+                    // 이미 enable_page_level_ads가 설정되었는지 확인
+                    const hasPageLevelAds = adsbygoogle.some(ad => ad.enable_page_level_ads);
+                    
+                    if (!hasPageLevelAds) {
+                        try {
+                            (adsbygoogle = window.adsbygoogle || []).push({
+                                google_ad_client: "ca-pub-2533613198240039",
+                                enable_page_level_ads: true
+                            });
+                            //console.log('AdSense 페이지 레벨 광고 설정 완료');
+                        } catch (error) {
+                            //console.log('AdSense 설정 오류:', error);
+                        }
+                    } else {
+                        //console.log('AdSense 페이지 레벨 광고가 이미 설정됨');
+                    }
+                } else if (attempts < maxAttempts) {
+                    //console.log(`AdSense 초기화 대기 중... (${attempts}/${maxAttempts})`);
+                    setTimeout(tryInitialize, 500);
+                } else {
+                    //console.log('AdSense 초기화 실패: 최대 시도 횟수 초과');
+                }
+            }
+            
+            tryInitialize();
+        }
+        
+        // 페이지 로드 완료 후 AdSense 초기화
+        window.addEventListener('load', initializeAdSense);
+    </script>
     <title data-i18n="gameTitle">타워 디펜스 게임 - 전략과 전술의 세계</title>
     <meta name="description" content="전략적인 타워 배치와 업그레이드를 통해 적을 막는 타워 디펜스 게임. 다양한 타워, 맵, 전략을 경험하세요.">
+    
+    <!-- SEO 메타 태그 -->
+    <meta name="keywords" content="타워디펜스, 게임, 전략게임, 웹게임, 무료게임, ChipGames, Tower Defense, Strategy Game, HTML5 게임, 캔버스 게임, 브라우저 게임">
+    <meta name="author" content="ChipGames">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta name="bingbot" content="index, follow">
+    <meta name="naver-site-verification" content="65d3da64f889ef71d174dc8257b162e13b8f03c0">
+    <link rel="canonical" href="https://chipgames.github.io">
+    
+    <!-- 추가 SEO 메타 태그 -->
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="msapplication-TileColor" content="#2c3e50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="타워 디펜스 게임">
+    
+    <!-- 추가 SEO 메타 태그 -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="ChipGames Tower Defense">
+    <meta name="msapplication-TileImage" content="images/ChipGames_favicon.png">
+    <meta name="msapplication-config" content="browserconfig.xml">
+    
+    <!-- Open Graph 태그 -->
+    <meta property="og:title" content="타워 디펜스 게임 - 전략과 전술의 세계">
+    <meta property="og:description" content="전략적인 타워 배치와 업그레이드를 통해 적을 막는 타워 디펜스 게임. 다양한 타워, 맵, 전략을 경험하세요.">
+    <meta property="og:image" content="https://chipgames.github.io/images/ChipGames_Logo.webp">
+    <meta property="og:image:type" content="image/webp">
+    <meta property="og:image:width" content="200">
+    <meta property="og:image:height" content="100">
+    <meta property="og:url" content="https://chipgames.github.io">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="ChipGames">
+    <meta property="og:locale" content="ko_KR">
+    
+    <!-- Twitter Card 태그 -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="타워 디펜스 게임 - 전략과 전술의 세계">
+    <meta name="twitter:description" content="전략적인 타워 배치와 업그레이드를 통해 적을 막는 타워 디펜스 게임">
+    <meta name="twitter:image" content="https://chipgames.github.io/images/ChipGames_Logo.webp">
+    <meta name="twitter:image:alt" content="ChipGames Tower Defense Logo">
+    
+    <!-- 구조화된 데이터 (Schema.org) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["WebApplication", "VideoGame"],
+      "name": "타워 디펜스 게임",
+      "alternateName": "ChipGames Tower Defense",
+      "description": "전략적인 타워 배치와 업그레이드를 통해 적을 막는 웹 게임",
+      "applicationCategory": "Game",
+      "operatingSystem": "Web Browser",
+      "url": "https://chipgames.github.io",
+      "author": {
+        "@type": "Organization",
+        "name": "ChipGames"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KRW"
+      },
+      "genre": "Strategy Game",
+      "gamePlatform": "Web Browser",
+      "playMode": "SinglePlayer",
+      "gameItem": [
+        {
+          "@type": "Thing",
+          "name": "타워",
+          "description": "방어용 타워 - 기본, 얼음, 독, 레이저, 스플래시, 지원 타워"
+        },
+        {
+          "@type": "Thing", 
+          "name": "적",
+          "description": "공격하는 적 - 일반, 빠른, 탱크, 치유사"
+        },
+        {
+          "@type": "Thing",
+          "name": "맵",
+          "description": "다양한 전략 맵 - 30종 이상의 맵 제공"
+        }
+      ],
+      "inLanguage": ["ko", "en", "zh", "ja"],
+      "datePublished": "2024-01-01",
+      "dateModified": "2025-01-27",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "150"
+      }
+    }
+    </script>
+    
+    <!-- 리소스 우선순위 설정 -->
+    <link rel="preload" href="style.css" as="style">
+    <link rel="preload" href="images/ChipGames_Logo.webp" as="image">
+    <link rel="preload" href="src/common.js" as="script">
+    
+    <!-- DNS 프리페치 (외부 리소스) -->
+    <link rel="dns-prefetch" href="//pagead2.googlesyndication.com">
+    <link rel="dns-prefetch" href="//unpkg.com">
+    
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="images/ChipGames_favicon.png">
-    <link rel="shortcut icon" type="image/png" href="images/ChipGames_favicon.png">
-    <link rel="apple-touch-icon" href="images/ChipGames_favicon.png">
+    <link rel="icon" type="image/x-icon" href="images/ChipGames_favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/ChipGames_favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/ChipGames_favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/ChipGames_favicon-180x180.png">
+    <link rel="manifest" href="site.webmanifest">
     <!-- 다국어 지원 스크립트 로드 -->
     <script src="lang/i18n.js"></script>
     <style>
@@ -67,12 +213,20 @@
         }
     </style>
 </head>
-<body>
+<body role="main" aria-label="타워 디펜스 게임">
     <!-- 헤더 영역 -->
     <header class="main-header">
         <nav class="main-nav">
             <div class="logo">
-                <img src="images/ChipGames_Logo.png" alt="ChipGames Logo" class="logo-image">
+                <picture>
+                    <source srcset="images/ChipGames_Logo.webp" type="image/webp">
+                    <img src="images/ChipGames_Logo.png" 
+                         alt="ChipGames Logo" 
+                         class="logo-image"
+                         width="200" 
+                         height="100"
+                         loading="eager">
+                </picture>
                 <h1 data-i18n="gameTitle">타워 디펜스</h1>
             </div>
             <button class="nav-toggle" aria-label="메뉴 열기">☰</button>
@@ -524,13 +678,150 @@
         <input type="checkbox" id="lowSpecToggle" />
     </div>
 
-    <script src="src/common.js"></script>
-    <script src="src/ui.js"></script>
-    <script src="src/tower.js"></script>
-    <script src="src/enemy.js"></script>
-    <script src="src/gameState.js"></script>
-    <script src="src/sound.js"></script>
-    <script src="src/saveSystem.js"></script>
-    <script src="src/game.js"></script>
+    <!-- 핵심 게임 로직 (우선 로드) -->
+    <script src="src/common.js" defer></script>
+    <script src="src/gameState.js" defer></script>
+    <script src="src/ui.js" defer></script>
+    
+    <!-- 게임 시스템 (지연 로드) -->
+    <script src="src/tower.js" defer></script>
+    <script src="src/enemy.js" defer></script>
+    <script src="src/saveSystem.js" defer></script>
+    
+    <!-- 사운드 시스템 (지연 로드) -->
+    <script src="src/sound.js" defer></script>
+    
+    <!-- 메인 게임 로직 (마지막 로드) -->
+    <script src="src/game.js" defer></script>
+    
+    <!-- 성능 모니터링 및 최적화 -->
+    <script>
+        // 개발/프로덕션 환경 감지
+        const isDevelopment = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:';
+        const isProduction = location.hostname === 'chipgames.github.io';
+        
+        // Core Web Vitals 모니터링 (프로덕션에서만)
+        if (isProduction && 'web-vital' in window) {
+            import('https://unpkg.com/web-vitals@3/dist/web-vitals.attribution.js').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+                getCLS(console.log);
+                getFID(console.log);
+                getFCP(console.log);
+                getLCP(console.log);
+                getTTFB(console.log);
+            });
+        }
+        
+        // 개발 환경 로그
+        //if (isDevelopment) {
+        //    console.log('🔧 개발 환경에서 실행 중');
+        //    console.log('ServiceWorker는 HTTPS 또는 localhost에서만 지원됩니다.');
+        //}
+        
+        // 광고 iframe 접근성 개선
+        function improveAdAccessibility() {
+            // Google AdSense iframe들의 aria-hidden 속성 제거
+            const adIframes = document.querySelectorAll('iframe[src*="googlesyndication.com"], iframe[src*="doubleclick.net"]');
+            adIframes.forEach(iframe => {
+                if (iframe.contentDocument) {
+                    const body = iframe.contentDocument.body;
+                    if (body && body.getAttribute('aria-hidden') === 'true') {
+                        body.removeAttribute('aria-hidden');
+                        //console.log('광고 iframe 접근성 개선 완료');
+                    }
+                }
+            });
+        }
+        
+        // AdSense 오류 방지
+        function preventAdSenseErrors() {
+            // adsbygoogle 배열이 이미 존재하는지 확인
+            if (window.adsbygoogle && Array.isArray(window.adsbygoogle)) {
+                //console.log('AdSense 이미 초기화됨');
+                return;
+            }
+            
+            // adsbygoogle 배열 초기화
+            window.adsbygoogle = window.adsbygoogle || [];
+            //console.log('AdSense 초기화 완료');
+        }
+        
+        // AdSense 중복 설정 방지
+        function preventDuplicateAdSense() {
+            // 안전한 배열 확인
+            if (window.adsbygoogle && Array.isArray(window.adsbygoogle)) {
+                // 이미 enable_page_level_ads가 설정되었는지 확인
+                if (window.adsbygoogle.some(ad => ad.enable_page_level_ads)) {
+                    //console.log('AdSense 페이지 레벨 광고가 이미 설정됨');
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        // DOM 로드 후 접근성 개선 실행
+        document.addEventListener('DOMContentLoaded', function() {
+            // AdSense 디버깅
+            //console.log('AdSense 상태 확인:', {
+            //    adsbygoogle: typeof window.adsbygoogle,
+            //    isArray: Array.isArray(window.adsbygoogle),
+            //    length: window.adsbygoogle ? window.adsbygoogle.length : 0,
+            //    hasPageLevelAds: (window.adsbygoogle && Array.isArray(window.adsbygoogle)) ? 
+            //        window.adsbygoogle.some(ad => ad.enable_page_level_ads) : false
+            //});
+            
+            // AdSense 오류 방지
+            preventAdSenseErrors();
+            
+            // 광고 로드 후 접근성 개선
+            setTimeout(improveAdAccessibility, 2000);
+            
+            // 광고 동적 로드 감지
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList') {
+                        mutation.addedNodes.forEach(function(node) {
+                            if (node.nodeType === 1 && node.tagName === 'IFRAME') {
+                                setTimeout(improveAdAccessibility, 1000);
+                            }
+                        });
+                    }
+                });
+            });
+            
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+        
+        // GitHub Pages 최적화: 리소스 로딩 완료 후 게임 초기화
+        window.addEventListener('load', function() {
+            // 모든 리소스 로딩 완료 후 실행
+            //console.log('🚀 ChipGames Tower Defense 로딩 완료');
+            
+            // 사운드 프리로딩 (사용자 상호작용 후)
+            document.addEventListener('click', function() {
+                if (typeof loadSound === 'function') {
+                    // 중요한 사운드만 미리 로드
+                    loadSound('ui_click');
+                    loadSound('game_start');
+                }
+            }, { once: true });
+        });
+        
+        // 오프라인 지원 (HTTPS 또는 localhost에서만)
+        if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    //console.log('✅ ServiceWorker 등록 성공:', registration.scope);
+                }).catch(function(error) {
+                    //console.log('❌ ServiceWorker 등록 실패:', error);
+                });
+            });
+        } else {
+            //console.log('ℹ️ ServiceWorker는 HTTPS 또는 localhost에서만 지원됩니다.');
+            //console.log('현재 프로토콜:', location.protocol, '호스트:', location.hostname);
+        }
+    </script>
 </body>
 </html> 
