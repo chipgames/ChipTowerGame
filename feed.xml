@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ChipGames 타워 디펜스 - 업데이트 소식</title>
+    <link>https://chipgames.github.io</link>
+    <description>전략적인 타워 배치와 업그레이드로 적을 막는 ChipGames 타워 디펜스 게임의 업데이트 소식입니다.</description>
+    <language>ko</language>
+    <lastBuildDate>Fri, 27 Feb 2025 00:00:00 +0900</lastBuildDate>
+    <atom:link href="https://chipgames.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>타워 디펜스 게임 - 50종 이상 맵 &amp; 6종 타워 업데이트</title>
+      <link>https://chipgames.github.io/updates.html#update-2025-02</link>
+      <guid isPermaLink="true">https://chipgames.github.io/updates.html#update-2025-02</guid>
+      <pubDate>Thu, 27 Feb 2025 00:00:00 +0900</pubDate>
+      <description><![CDATA[<p><img src="https://chipgames.github.io/images/ChipGames_Logo.webp" alt="ChipGames 타워 디펜스 로고" width="200" height="100"></p>
+<p>전략적인 타워 배치와 업그레이드를 통해 적을 막는 ChipGames 타워 디펜스 게임이 다양한 콘텐츠로 업데이트되었습니다.</p>
+<p><strong>주요 업데이트 내용:</strong></p>
+<ul>
+<li>50종 이상의 다양한 전략 맵 추가 (기하학적, 자연형, 복합 맵)</li>
+<li>6종류의 타워: 기본, 얼음, 독, 레이저, 스플래시, 지원 타워</li>
+<li>4종류의 적: 일반, 빠른, 탱커, 치유사 + 보스 시스템</li>
+<li>특수 이벤트, 업적 시스템, 저장/불러오기 기능</li>
+<li>PWA 지원으로 오프라인 플레이 가능</li>
+<li>한국어, 영어, 중국어, 일본어 다국어 지원</li>
+</ul>
+<p>브라우저에서 바로 플레이 가능한 무료 웹 게임입니다. <a href="https://chipgames.github.io">지금 게임하기</a></p>]]></description>
+    </item>
+    <item>
+      <title>ChipGames 타워 디펜스 게임 오픈</title>
+      <link>https://chipgames.github.io/updates.html#update-2025-01</link>
+      <guid isPermaLink="true">https://chipgames.github.io/updates.html#update-2025-01</guid>
+      <pubDate>Mon, 27 Jan 2025 00:00:00 +0900</pubDate>
+      <description><![CDATA[<p><img src="https://chipgames.github.io/images/ChipGames_Logo.webp" alt="ChipGames 로고" width="200" height="100"></p>
+<p>ChipGames 타워 디펜스 게임이 정식 오픈되었습니다. HTML5 Canvas와 순수 JavaScript로 개발된 웹 기반 전략 게임입니다.</p>
+<p><strong>게임 특징:</strong></p>
+<ul>
+<li>타워 설치 및 업그레이드로 적의 웨이브 방어</li>
+<li>다양한 난이도: 쉬움, 보통, 어려움</li>
+<li>보스 몬스터 및 특수 스킬 (방어막, 순간이동, 소환)</li>
+<li>골드 러시, 타워 강화 등 무작위 특수 이벤트</li>
+<li>저장/불러오기로 언제든 이어서 플레이</li>
+</ul>
+<p>최고의 기록에 도전해 보세요! <a href="https://chipgames.github.io">게임 시작</a></p>]]></description>
+    </item>
+  </channel>
+</rss>
